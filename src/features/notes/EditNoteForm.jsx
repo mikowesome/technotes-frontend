@@ -2,12 +2,15 @@ import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import useAuth from "../../hooks/useAuth"
 import { useDeleteNoteMutation, useUpdateNoteMutation } from "./notesApiSlice"
 
 
 
 const EditNoteForm = ({ note, users }) => {
   const navigate = useNavigate()
+
+  const { isAdmin, isManager } = useAuth()
 
   const [updateNote, {
     isLoading,
@@ -56,22 +59,51 @@ const EditNoteForm = ({ note, users }) => {
   const created = new Date(note.createdAt).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })
   const updated = new Date(note.updatedAt).toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })
 
-  const options = users.map(user => {
-    return (
-      <option
-        key={user.id}
-        value={user.id}
-      >
-        {user.username}
-      </option>
-    )
-  })
+//   const options = users.map(user => {
+//     return (
+//       <option
+//         key={user.id}
+//         value={user.id}
+//       >
+//         {user.username}
+//       </option>
+//     )
+//   })
+
+let options
+if (!isAdmin || !isManager) {
+	options = <option value={note.user}>{note.username}</option>
+} else {
+	options = users.map(user => {
+		return (
+		  	<option
+				key={user.id}
+				value={user.id}
+		  	>
+				{user.username}
+		  	</option>
+		)
+	})
+}
 
   const errClass = (isError || isDelError) ? "errmsg" : 'offscreen'
   const validTitleClass = !title ? 'form__input--incomplete' : ''
   const validTextClass = !text ? 'form__input--incomplete' : ''
 
   const errContent = (error?.data?.message || delerror?.data?.message) ?? ''
+
+  let deleteButton
+  if (isManager || isAdmin) {
+	deleteButton = (
+		<button
+			className='icon-button'
+			title='Delete'
+			onClick={onDeleteNoteClicked}
+		>
+			<FontAwesomeIcon icon={faTrashCan} cursor='pointer' />
+		</button>
+	)
+  }
 
   const content = (
     <>
@@ -89,13 +121,7 @@ const EditNoteForm = ({ note, users }) => {
             >
               <FontAwesomeIcon icon={faSave} cursor='pointer' />
             </button>
-            <button
-              className='icon-button'
-              title='Delete'
-              onClick={onDeleteNoteClicked}
-            >
-              <FontAwesomeIcon icon={faTrashCan} cursor='pointer' />
-            </button>
+            {deleteButton}
           </div>
         </div>
 
