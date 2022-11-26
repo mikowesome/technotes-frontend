@@ -156,7 +156,7 @@ const EditUserForm = ({ user }) => {
                     className={`form__input ${validPwdClass}`}
                     id='password'
                     name='password'
-                    type='text'
+                    type='password'
                     autoComplete='off'
                     value={formData.password}
                     onChange={handleFormChange}
