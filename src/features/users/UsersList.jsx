@@ -1,8 +1,11 @@
 import PulseLoader from "react-spinners/PulseLoader";
+import useTitle from "../../hooks/useTitle";
 import User from "./User";
 import { useGetUsersQuery } from "./usersApiSlice"
 
 const UsersList = () => {
+  useTitle('techNotes: Users List')
+
   const {
     data: users,
     isLoading,

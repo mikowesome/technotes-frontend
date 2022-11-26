@@ -4,11 +4,14 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ROLES } from "../../config/roles"
 import { useAddNewUserMutation } from "./usersApiSlice"
+import useTitle from '../../hooks/useTitle'
 
 const USER_REGEX = /^[A-z]{3,20}$/
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}/
 
 const NewUserForm = () => {
+    useTitle('techNotes: New User')
+
     const navigate = useNavigate()
 
     const [addNewUser, {
@@ -39,7 +42,7 @@ const NewUserForm = () => {
 
     const handleRolesChanged = (event) => {
         const values = Array.from(
-            event.target.selectionOptions,
+            event.target.selectedOptions,
             (option) => option.value
         )
         setRoles(values)
