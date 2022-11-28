@@ -54,6 +54,48 @@ const Login = () => {
 		}
 	}
 
+	const handleLoginAsTestAdmin = async (event) => {
+		event.preventDefault()
+		try {
+			const { accessToken } = await login({ username: 'testAdmin', password: '1234test' }).unwrap()
+			dispatch(setCredentials({ accessToken }))
+			setUsername('')
+			setPassword('')
+			navigate('/dash')
+		} catch (error) {
+			if (!error.status) {
+				setErrMsg('No Server Response')
+			} else if (error.status === 400) {
+				setErrMsg('Missing Username or Password')
+			} else if (error.status === 401) {
+				setErrMsg('Unauthorized')
+			} else {
+				setErrMsg(error?.data?.message)
+			}
+		}
+	}
+
+	const handleLoginAsTestEmployee = async (event) => {
+		event.preventDefault()
+		try {
+			const { accessToken } = await login({ username: 'testEmployee', password: '1234test' }).unwrap()
+			dispatch(setCredentials({ accessToken }))
+			setUsername('')
+			setPassword('')
+			navigate('/dash')
+		} catch (error) {
+			if (!error.status) {
+				setErrMsg('No Server Response')
+			} else if (error.status === 400) {
+				setErrMsg('Missing Username or Password')
+			} else if (error.status === 401) {
+				setErrMsg('Unauthorized')
+			} else {
+				setErrMsg(error?.data?.message)
+			}
+		}
+	}
+
 	const errClass = errMsg ? 'errmsg' : 'offscreen'
 
 	if (isLoading) return <PulseLoader color={ '#FFF' } />
@@ -87,7 +129,7 @@ const Login = () => {
 						value={password} 
 						onChange={handlePasswordInput} 
 						required />
-					<button className='form__submit-button'>Sign In</button>
+					<button type='submit' className='form__submit-button'>Sign In</button>
 
 					<label htmlFor='persist' className='form__persist'>
 						<input 
@@ -99,6 +141,22 @@ const Login = () => {
 						/>
 						Trust This Device
 					</label>
+
+					<button 
+						type='button' 
+						className='form__submit-button'
+						onClick={handleLoginAsTestAdmin}
+					>
+						Sign In as Test Admin
+					</button>
+
+					<button 
+						type='button' 
+						className='form__submit-button'
+						onClick={handleLoginAsTestEmployee}
+					>
+						Sign In as Test Employee
+					</button>
 				</form>
 			</main>
 			<footer>
