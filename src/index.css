@@ -285,6 +285,10 @@ tr {
   border-radius: 15px;
 }
 
+.form__submit-button {
+  cursor: pointer;
+}
+
 .form__input--text {
   min-height: 150px;
 }
